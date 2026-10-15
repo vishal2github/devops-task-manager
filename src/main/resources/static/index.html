@@ -63,6 +63,7 @@ button:disabled { opacity: .5; cursor: wait; }
 }
 .badge.pending { background: #fff4d9; color: #936400; }
 #message { min-height: 22px; color: #bd3232; font-size: 13px; }
+#message.success { color: #15803d; }
 #health { font-size: 12px; color: #b9c8e2; }
 .empty { color: #778399; text-align: center; padding: 24px; }
 @media(max-width: 600px) {
@@ -149,8 +150,11 @@ async function api(path, options = {}) {
   return response.status === 204 ? null : response.json();
 }
 
-function message(text = '') {
-  $('message').textContent = text;
+function message(text = '', type = 'error') {
+	const element = $('message');
+	element.textContent = text;
+	
+	element.classList.toggle('success', type === 'success');
 }
 
 function render() {
@@ -256,7 +260,7 @@ $('taskForm').addEventListener('submit', async event => {
     }
 
     resetForm();
-    message('Saved successfully.');
+    message('Saved successfully.', 'success');
     await loadTasks();
   } catch (error) {
     message(error.message);
